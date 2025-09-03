@@ -1,6 +1,6 @@
 const Restaurant = require('../modal/restaurant');
 const jwt = require('jsonwebtoken');
-const admin = require("../config/firebase"); // Firebase Admin SDK initialized here
+const admin = require("../../config/firebase"); // Firebase Admin SDK initialized here
 
 const { uploadImageToS3, updateFromS3, uploadMultipleImagesToS3 } = require('../../utils/s3Utils');
 
