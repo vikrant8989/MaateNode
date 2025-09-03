@@ -204,3 +204,11 @@ process.on('uncaughtException', (err) => {
 });
 
 startServer();
+
+const handler = async (req, res) => {
+  // Connect to database on each request (serverless)
+  await connectDB();
+  
+  return app(req, res);
+};
+module.exports = handler;
