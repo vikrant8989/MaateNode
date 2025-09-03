@@ -6,7 +6,8 @@ const path = require('path');
 
 // Load environment variables
 dotenv.config();
-
+const admin = require('./config/firebase'); 
+console.log('✅ [SERVER] Firebase initialized successfully');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -17,7 +18,23 @@ app.use(express.urlencoded({ extended: true }));
 
 // Database Connection
 const connectDB = require('./config/database');
+let firebaseInitialized = false;
 
+// Initialize Firebase for serverless if not already done
+const initializeFirebaseForServerless = () => {
+  if (!firebaseInitialized) {
+    console.log('🔥 [SERVERLESS] Initializing Firebase for serverless environment...');
+    try {
+      // Firebase is already initialized above, just verify it's working
+      const auth = admin.auth();
+      console.log('✅ [SERVERLESS] Firebase Auth verified successfully');
+      firebaseInitialized = true;
+    } catch (error) {
+      console.error('❌ [SERVERLESS] Firebase initialization error:', error);
+      throw error;
+    }
+  }
+};
 // Import routes with error handling
 let adminRoutes, adminRestaurantRoutes, adminUserRoutes, adminUserActivityRoutes, adminUserAddressRoutes, adminUserPaymentRoutes, adminUserSubscriptionRoutes, adminUserOrderHistoryRoutes, adminUserProfileRoutes, adminUserReviewRoutes, adminDriverRoutes, adminRestaurantPlanRoutes, adminRestaurantOfferRoutes, adminRestaurantItemRoutes, adminRestaurantCategoryRoutes, adminRestaurantReviewRoutes, adminOrderRoutes, userRoutes, userPlanRoutes, restaurantRoutes, restaurantItemRoutes, restaurantCategoryRoutes, restaurantPlanRoutes, restaurantOfferRoutes, driverRoutes, orderRoutes, reviewRoutes;
 
@@ -179,6 +196,7 @@ app.use('*', (req, res) => {
 // Start server
 const startServer = async () => {
   try {
+    const auth = admin.auth();
     await connectDB();
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
@@ -206,6 +224,7 @@ process.on('uncaughtException', (err) => {
 startServer();
 
 const handler = async (req, res) => {
+  initializeFirebaseForServerless();
   // Connect to database on each request (serverless)
   await connectDB();
   
