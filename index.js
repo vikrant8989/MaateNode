@@ -6,7 +6,7 @@ const path = require('path');
 
 // Load environment variables
 dotenv.config();
-const admin = require('../backend/config/firebase'); 
+const admin = require('./config/firebase'); 
 console.log('✅ [SERVER] Firebase initialized successfully');
 const app = express();
 const PORT = process.env.PORT || 3001;
